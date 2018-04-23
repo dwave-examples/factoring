@@ -10,7 +10,7 @@ class TestInterfaces(unittest.TestCase):
     def test_factor_output(self):
         P = randint(0, 2**6-1)
         bqm = get_factor_bqm(P)
-        response = submit_factor_bqm(bqm)
+        response, _ = submit_factor_bqm(bqm)
         output = postprocess_factor_response(response, P)
 
         self.assertSetEqual(set(output), {'results', 'numberOfReads'})

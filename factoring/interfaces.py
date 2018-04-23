@@ -27,7 +27,7 @@ def validate_input(ui, range_):
         raise ValueError("Input must be between {} and {}".format(start, stop))
 
 
-NUM_READS = 1000
+NUM_READS = 50
 
 
 def get_factor_bqm(P):
@@ -50,7 +50,7 @@ def get_factor_bqm(P):
     return bqm
 
 
-def submit_factor_bqm(bqm):
+def submit_factor_bqm(bqm, embedding=None):
     # find embedding and put on system
     sampler = DWaveSampler()
 
@@ -64,17 +64,18 @@ def submit_factor_bqm(bqm):
 
     sample_time = time.time()
     # apply the embedding to the given problem to map it to the child sampler
-    __, target_edgelist, target_adjacency = sampler.structure
+    __, target_edgelist, target_adjacency=sampler.structure
 
-    # get the embedding
-    embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
+    if not embedding:
+        # get the embedding
+        embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
 
-    if bqm and not embedding:
-        raise ValueError("no embedding found")
+        if bqm and not embedding:
+            raise ValueError("no embedding found")
 
-    # this should change in later versions
-    if isinstance(embedding, list):
-        embedding = dict(enumerate(embedding))
+        # this should change in later versions
+        if isinstance(embedding, list):
+            embedding = dict(enumerate(embedding))
 
     bqm_embedded = dimod.embed_bqm(bqm, embedding, target_adjacency)
 
