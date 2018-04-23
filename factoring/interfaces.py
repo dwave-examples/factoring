@@ -6,7 +6,9 @@ import logging
 from collections import OrderedDict
 
 from dwave.system.samplers import DWaveSampler
-from dwave.system.composites import EmbeddingComposite
+# from dwave.system.composites import EmbeddingComposite
+import minorminer
+import dimod
 
 from factoring.circuits import three_bit_multiplier
 from factoring.gates import GATES
@@ -50,7 +52,7 @@ def get_factor_bqm(P):
 
 def submit_factor_bqm(bqm):
     # find embedding and put on system
-    sampler = EmbeddingComposite(DWaveSampler())
+    sampler = DWaveSampler()
 
     kwargs = {}
     if 'num_reads' in sampler.parameters:
@@ -61,10 +63,27 @@ def submit_factor_bqm(bqm):
         kwargs['answer_mode'] = 'histogram'
 
     sample_time = time.time()
-    response = sampler.sample(bqm, **kwargs)
+    # apply the embedding to the given problem to map it to the child sampler
+    __, target_edgelist, target_adjacency = sampler.structure
+
+    # get the embedding
+    embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
+
+    if bqm and not embedding:
+        raise ValueError("no embedding found")
+
+    # this should change in later versions
+    if isinstance(embedding, list):
+        embedding = dict(enumerate(embedding))
+
+    bqm_embedded = dimod.embed_bqm(bqm, embedding, target_adjacency)
+
+    response = sampler.sample(bqm_embedded, **kwargs)
+
+    response = dimod.unembed_response(response, embedding, source_bqm=bqm)
     logging.debug('embedding and sampling time: %s', time.time() - sample_time)
 
-    return response
+    return response, embedding
 
 
 def postprocess_factor_response(response, P):
