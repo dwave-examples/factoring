@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 from dwave.system.samplers import DWaveSampler
 # from dwave.system.composites import EmbeddingComposite
+from dwave.system.embedding import get_embedding_from_tag
 import minorminer
 import dimod
 
@@ -64,8 +65,9 @@ def submit_factor_bqm(bqm, embedding=None):
 
     sample_time = time.time()
     # apply the embedding to the given problem to map it to the child sampler
-    __, target_edgelist, target_adjacency=sampler.structure
+    target_nodelist, target_edgelist, target_adjacency=sampler.structure
 
+    #embedding = get_embedding_from_tag('tag', target_nodelist, target_edgelist)
     if not embedding:
         # get the embedding
         embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
@@ -77,7 +79,7 @@ def submit_factor_bqm(bqm, embedding=None):
         if isinstance(embedding, list):
             embedding = dict(enumerate(embedding))
 
-    bqm_embedded = dimod.embed_bqm(bqm, embedding, target_adjacency)
+    bqm_embedded = dimod.embed_bqm(bqm, embedding, target_adjacency, 3.0)
 
     response = sampler.sample(bqm_embedded, **kwargs)
 
