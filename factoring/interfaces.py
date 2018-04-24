@@ -6,8 +6,6 @@ import logging
 from collections import OrderedDict
 
 from dwave.system.samplers import DWaveSampler
-# from dwave.system.composites import EmbeddingComposite
-from dwave.system.embedding import get_embedding_from_tag
 import minorminer
 import dimod
 
@@ -26,9 +24,6 @@ def validate_input(ui, range_):
 
     if ui not in range_:
         raise ValueError("Input must be between {} and {}".format(start, stop))
-
-
-NUM_READS = 50
 
 
 def get_factor_bqm(P):
@@ -57,7 +52,7 @@ def submit_factor_bqm(bqm, use_saved_embedding=True):
 
     kwargs = {}
     if 'num_reads' in sampler.parameters:
-        kwargs['num_reads'] = NUM_READS
+        kwargs['num_reads'] = 50
     if 'num_spin_reversal_transforms' in sampler.parameters:
         kwargs['num_spin_reversal_transforms'] = 1
     if 'answer_mode' in sampler.parameters:
