@@ -51,7 +51,7 @@ def get_factor_bqm(P):
     return bqm
 
 
-def submit_factor_bqm(bqm, embedding=None):
+def submit_factor_bqm(bqm, use_saved_embedding=True):
     # find embedding and put on system
     sampler = DWaveSampler()
 
@@ -65,10 +65,11 @@ def submit_factor_bqm(bqm, embedding=None):
 
     sample_time = time.time()
     # apply the embedding to the given problem to map it to the child sampler
-    target_nodelist, target_edgelist, target_adjacency=sampler.structure
+    _, target_edgelist, target_adjacency=sampler.structure
 
-    #embedding = get_embedding_from_tag('tag', target_nodelist, target_edgelist)
-    if not embedding:
+    if use_saved_embedding:
+        from factoring.embedding import embedding
+    else:
         # get the embedding
         embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
 
@@ -86,7 +87,7 @@ def submit_factor_bqm(bqm, embedding=None):
     response = dimod.unembed_response(response, embedding, source_bqm=bqm)
     logging.debug('embedding and sampling time: %s', time.time() - sample_time)
 
-    return response, embedding
+    return response
 
 
 def postprocess_factor_response(response, P):

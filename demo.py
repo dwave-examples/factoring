@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     # send problem to QPU
     print("Running on QPU")
-    response, _ = submit_factor_bqm(bqm)
+    response = submit_factor_bqm(bqm)
 
     # output results
     output = postprocess_factor_response(response, P)
