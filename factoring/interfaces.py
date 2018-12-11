@@ -56,7 +56,7 @@ def validate_input(ui, range_):
 
 
 @qpu_ha
-def factor(P, use_saved_embedding=True):
+def factor(P, use_saved_embedding=False):
 
     ####################################################################################################
     # get circuit
