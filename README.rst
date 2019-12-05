@@ -1,6 +1,3 @@
-**WARNING**: This repository is obsolete. The Factoring demo is now maintained in
-`dwavesystems/demos <https://github.com/dwavesystems/demos/tree/master/factoring>`_.
-
 .. image:: https://circleci.com/gh/dwavesystems/factoring-demo.svg?style=svg
     :target: https://circleci.com/gh/dwavesystems/factoring-demo
 
