@@ -1,5 +1,5 @@
-Demo of Factoring
-=================
+Factoring
+=========
 This code demonstrates the use of the D-Wave system to solve a factoring
 problem. This is done by turning said problem into a three-bit multiplier
 circuit.
