@@ -1,3 +1,4 @@
+=========
 Factoring
 =========
 This code demonstrates the use of the D-Wave system to solve a factoring
@@ -54,5 +55,5 @@ overriden and the code to calculate a new embedding can be called by using:
 
 License
 -------
-Released under the Apache License 2.0. See `LICENSE <../LICENSE>`_ file.
+Released under the Apache License 2.0. See `LICENSE <LICENSE>`_ file.
 
