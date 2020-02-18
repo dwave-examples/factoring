@@ -1,3 +1,7 @@
+.. image:: https://circleci.com/gh/dwave-examples/factoring.svg?style=svg
+    :target: https://circleci.com/gh/dwave-examples/factoring
+    :alt: Linux/Mac/Windows build status
+
 =========
 Factoring
 =========
