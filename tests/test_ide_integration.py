@@ -105,3 +105,8 @@ class LeapIdeIntegrationTests(unittest.TestCase):
 
         self.VerifyErrors(output)
 
+    def tearDown(self):
+        self.assertEqual([], self.verificationErrors)
+
+if __name__ == '__main__':
+    unittest.main()
