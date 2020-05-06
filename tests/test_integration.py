@@ -20,22 +20,22 @@ import os
 class IntegrationTests(unittest.TestCase):
 
     def test_factoring(self):
-        cwd=os.getcwd()
+        cwd = os.getcwd()
         p = Popen(["python",  cwd+"/demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
         p.stdin.write(b'49\n')
         time.sleep(5)
         output = p.communicate()[0]
-        output=str(output)
-        print("Example output \n"+output)
+        output = str(output).upper()
+        print("Example output \n"+ output)
 
-        with self.subTest(msg="Verify if output contains 'results': [{'a': 7, \n"):
-            self.assertIn("'results': [{'a': 7,".upper(),output.upper())
-        with self.subTest(msg="Verify if output contains 'b': 7 \n"):
-            self.assertIn("'b': 7,".upper(),output.upper())
-        with self.subTest(msg="Verify if error string contains in output \n"):
-            self.assertNotIn("ERROR",output.upper())
-        with self.subTest(msg="Verify if warning string contains in output \n"):
-            self.assertNotIn("WARNING",output.upper())
+        with self.subTest(msg="Verify if output contains 'results': [{'a': 7"):
+            self.assertIn("'results': [{'a': 7,".upper(), output)
+        with self.subTest(msg="Verify if output contains 'b': 7"):
+            self.assertIn("'b': 7,".upper(), output)
+        with self.subTest(msg="Verify if error string contains in output"):
+            self.assertNotIn("ERROR", output)
+        with self.subTest(msg="Verify if warning string contains in output"):
+            self.assertNotIn("WARNING1", output)
 
 if __name__ == '__main__':
     unittest.main()
