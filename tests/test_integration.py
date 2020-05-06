@@ -14,7 +14,6 @@
 
 from subprocess import Popen, PIPE,STDOUT
 import unittest
-import time
 import os
 
 class IntegrationTests(unittest.TestCase):
@@ -23,7 +22,6 @@ class IntegrationTests(unittest.TestCase):
         cwd = os.getcwd()
         p = Popen(["python", cwd+"/demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
         p.stdin.write(b'49\n')
-        time.sleep(5)
         output = p.communicate()[0]
         output = str(output).upper()
         print("Example output \n"+ output)
