@@ -21,7 +21,7 @@ class IntegrationTests(unittest.TestCase):
 
     def test_factoring(self):
         cwd = os.getcwd()
-        p = Popen(["python",  cwd+"/demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
+        p = Popen(["python", cwd+"/demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
         p.stdin.write(b'49\n')
         time.sleep(5)
         output = p.communicate()[0]
@@ -35,7 +35,7 @@ class IntegrationTests(unittest.TestCase):
         with self.subTest(msg="Verify if error string contains in output"):
             self.assertNotIn("ERROR", output)
         with self.subTest(msg="Verify if warning string contains in output"):
-            self.assertNotIn("WARNING1", output)
+            self.assertNotIn("WARNING", output)
 
 if __name__ == '__main__':
     unittest.main()
