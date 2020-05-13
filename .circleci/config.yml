@@ -261,7 +261,7 @@ workflows:
       - test-osx-py37
       - test-osx-py36
       - test-osx-py35
-      - test-win-py38
+      #- test-win-py38
       - test-win-py37
       - test-win-py36
       - test-win-py35
