@@ -13,13 +13,14 @@
 # limitations under the License.
 
 from subprocess import Popen, PIPE,STDOUT
-import unittest
 import os
+import sys
+import unittest
 
 class IntegrationTests(unittest.TestCase):
 
     def test_factoring(self):
-        p = Popen(["python","demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
+        p = Popen([sys.executable, "demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         p.stdin.write(b'49\n')
         output = p.communicate()[0]
         output = str(output).upper()
