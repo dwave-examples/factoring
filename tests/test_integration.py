@@ -23,7 +23,8 @@ class IntegrationTests(unittest.TestCase):
         p.stdin.write(b'49\n')
         output = p.communicate()[0]
         output = str(output).upper()
-        print("Example output \n"+ output)
+        if os.getenv('DEBUG_OUTPUT'):
+            print("Example output \n"+ output)
 
         with self.subTest(msg="Verify if output contains 'results': [{'a': 7"):
             self.assertIn("'results': [{'a': 7,".upper(), output)
