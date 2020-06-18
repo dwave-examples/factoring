@@ -17,10 +17,13 @@ import os
 import sys
 import unittest
 
+project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 class IntegrationTests(unittest.TestCase):
 
     def test_factoring(self):
-        p = Popen([sys.executable, "demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        demo_file = os.path.join(project_dir, 'demo.py')
+        p = Popen([sys.executable, demo_file], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         p.stdin.write(b'49\n')
         output = p.communicate()[0]
         output = str(output).upper()
