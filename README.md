@@ -2,34 +2,30 @@
     :target: https://circleci.com/gh/dwave-examples/factoring
     :alt: Linux/Mac/Windows build status
 
-=========
-Factoring
-=========
+
+# Factoring
+
 This code demonstrates the use of the D-Wave system to solve a factoring
 problem. This is done by turning said problem into a three-bit multiplier
 circuit.
 
-Usage
------
+## Usage
+
 A minimal working example using the main interface function can be seen by
 running:
-
-.. code-block:: bash
 
   python demo.py
 
 The user is prompted to enter a six-bit integer: P, which represents a product
 to be factored.
 
-.. code-block::
-
   Input product        ( 0 <= P <= 63):
 
 The algorithm returns possible A and B values, which are the inputs the circuit
 multiplies to calculate the product, P.
 
-Code Overview
--------------
+## Code Overview
+
 Integer factoring is the decomposition of an integer into factors that, when
 multiplied together, give the original number. For example, the factors of 15
 are 3 and 5.
@@ -48,16 +44,15 @@ through a series of gates to yield a result, as they do in a multiplication
 circuit.
 
 
-Code Specifics
---------------
+## Code Specifics
+
 By default, the main interface function uses a saved embedding. This can be
 overriden and the code to calculate a new embedding can be called by using:
 
-.. code-block:: python
 
   factor(P, use_saved_embedding=False)
 
-License
--------
+## License
+
 Released under the Apache License 2.0. See `LICENSE <LICENSE>`_ file.
 
