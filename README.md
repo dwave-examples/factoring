@@ -11,12 +11,16 @@ circuit.
 A minimal working example using the main interface function can be seen by
 running:
 
-  python demo.py
+```bash
+python demo.py
+```
 
 The user is prompted to enter a six-bit integer: P, which represents a product
 to be factored.
 
-  Input product        ( 0 <= P <= 63):
+```bash
+Input product        ( 0 <= P <= 63):
+```
 
 The algorithm returns possible A and B values, which are the inputs the circuit
 multiplies to calculate the product, P.
@@ -45,7 +49,9 @@ circuit.
 By default, the main interface function uses a saved embedding. This can be
 overriden and the code to calculate a new embedding can be called by using:
 
-  factor(P, use_saved_embedding=False)
+```bash
+factor(P, use_saved_embedding=False)
+```
 
 ## License
 
