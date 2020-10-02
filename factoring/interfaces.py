@@ -92,7 +92,7 @@ def factor(P, use_saved_embedding=True):
     sample_time = time.time()
 
     # get QPU sampler
-    sampler = DWaveSampler(solver=dict(qpu=True))
+    sampler = DWaveSampler()
     _, target_edgelist, target_adjacency = sampler.structure
 
     embedding = None
