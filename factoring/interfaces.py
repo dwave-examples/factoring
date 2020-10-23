@@ -20,29 +20,9 @@ import functools
 from collections import OrderedDict
 
 import dwavebinarycsp as dbc
-import dwave.embedding
-from dwave.system.samplers import DWaveSampler
-from dwave.cloud.exceptions import SolverOfflineError
-import minorminer
+from dwave.system import DWaveSampler, EmbeddingComposite
 
 log = logging.getLogger(__name__)
-
-
-def qpu_ha(f):
-    """High-availability QPU wrapper: retry (with next solver) if active solver
-    goes offline.
-    """
-
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        while True:
-            try:
-                return f(*args, **kwargs)
-            except SolverOfflineError:
-                pass
-
-    return wrapper
-
 
 def validate_input(ui, range_):
     start = range_[0]
@@ -54,79 +34,48 @@ def validate_input(ui, range_):
     if ui not in range_:
         raise ValueError("Input must be between {} and {}".format(start, stop))
 
+def factor(P):
 
-@qpu_ha
-def factor(P, use_saved_embedding=True):
-
-    ####################################################################################################
-    # get circuit
-    ####################################################################################################
-
+    # Construct circuit
+    # =================
     construction_start_time = time.time()
 
     validate_input(P, range(2 ** 6))
 
-    # get constraint satisfaction problem
+    # Constraint satisfaction problem
     csp = dbc.factories.multiplication_circuit(3)
 
-    # get binary quadratic model
+    # Binary quadratic model
     bqm = dbc.stitch(csp, min_classical_gap=.1)
 
-    # we know that multiplication_circuit() has created these variables
+    # multiplication_circuit() creates these variables
     p_vars = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5']
 
-    # convert P from decimal to binary
+    # Convert P from decimal to binary
     fixed_variables = dict(zip(reversed(p_vars), "{:06b}".format(P)))
     fixed_variables = {var: int(x) for(var, x) in fixed_variables.items()}
 
-    # fix product qubits
+    # Fix product qubits
     for var, value in fixed_variables.items():
         bqm.fix_variable(var, value)
 
     log.debug('bqm construction time: %s', time.time() - construction_start_time)
 
-    ####################################################################################################
-    # run problem
-    ####################################################################################################
+    # Run problem
+    # ===========
 
     sample_time = time.time()
 
-    # get QPU sampler
-    sampler = DWaveSampler()
-    _, target_edgelist, target_adjacency = sampler.structure
+    # Set a QPU sampler
+    sampler = EmbeddingComposite(DWaveSampler())
 
-    embedding = None
-    if use_saved_embedding:
-        # load a pre-calculated embedding
-        from factoring.embedding import embeddings
-        embedding = embeddings.get(sampler.solver.id)
-    if not embedding:
-        # get the embedding
-        embedding = minorminer.find_embedding(bqm.quadratic, target_edgelist)
-        if bqm and not embedding:
-            raise ValueError("no embedding found")
-
-    # apply the embedding to the given problem to map it to the sampler
-    bqm_embedded = dwave.embedding.embed_bqm(bqm, embedding, target_adjacency, 3.0)
-
-    # draw samples from the QPU
-    kwargs = {}
-    if 'num_reads' in sampler.parameters:
-        kwargs['num_reads'] = 50
-    if 'answer_mode' in sampler.parameters:
-        kwargs['answer_mode'] = 'histogram'
-    response = sampler.sample(bqm_embedded, **kwargs)
-
-    # convert back to the original problem space
-    response = dwave.embedding.unembed_sampleset(response, embedding, source_bqm=bqm)
-
-    sampler.client.close()
+    num_reads = 50
+    sampleset = sampler.sample(bqm, num_reads=50)
 
     log.debug('embedding and sampling time: %s', time.time() - sample_time)
 
-    ####################################################################################################
-    # output results
-    ####################################################################################################
+    # Output results
+    # ==============
 
     output = {
         "results": [],
@@ -145,42 +94,35 @@ def factor(P, use_saved_embedding=True):
         "numberOfReads": None
     }
 
-    # we know that multiplication_circuit() has created these variables
+    # multiplication_circuit() creates these variables
     a_vars = ['a0', 'a1', 'a2']
     b_vars = ['b0', 'b1', 'b2']
 
-    # histogram answer_mode should return counts for unique solutions
-    if 'num_occurrences' not in response.data_vectors:
-        response.data_vectors['num_occurrences'] = [1] * len(response)
-
-    # should equal num_reads
-    total = sum(response.data_vectors['num_occurrences'])
-
     results_dict = OrderedDict()
-    for sample, num_occurrences in response.data(['sample', 'num_occurrences']):
-        # convert A and B from binary to decimal
+    for sample, num_occurrences in sampleset.data(['sample', 'num_occurrences']):
+        # Convert A and B from binary to decimal
         a = b = 0
         for lbl in reversed(a_vars):
             a = (a << 1) | sample[lbl]
         for lbl in reversed(b_vars):
             b = (b << 1) | sample[lbl]
-        # cast from numpy.int to int
+        # Cast from numpy.int to int
         a, b = int(a), int(b)
-        # aggregate results by unique A and B values (ignoring internal circuit variables)
+        # Aggregate results by unique A and B values (ignoring internal circuit variables)
         if (a, b, P) in results_dict:
             results_dict[(a, b, P)]["numOfOccurrences"] += num_occurrences
             results_dict[(a, b, P)]["percentageOfOccurrences"] = 100 * \
-                results_dict[(a, b, P)]["numOfOccurrences"] / total
+                results_dict[(a, b, P)]["numOfOccurrences"] / num_reads
         else:
             results_dict[(a, b, P)] = {"a": a,
                                        "b": b,
                                        "valid": a * b == P,
                                        "numOfOccurrences": num_occurrences,
-                                       "percentageOfOccurrences": 100 * num_occurrences / total}
+                                       "percentageOfOccurrences": 100 * num_occurrences / num_reads}
 
     output['results'] = list(results_dict.values())
-    output['numberOfReads'] = total
-    if 'timing' in response.info:
-        output['timing']['actual']['qpuProcessTime'] = response.info['timing']['qpu_access_time']
+    output['numberOfReads'] = num_reads
+
+    output['timing']['actual']['qpuProcessTime'] = sampleset.info['timing']['qpu_access_time']
 
     return output
