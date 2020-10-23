@@ -67,8 +67,8 @@ def factor(P):
     # Set a QPU sampler
     sampler = EmbeddingComposite(DWaveSampler())
 
-    num_reads = 50
-    sampleset = sampler.sample(bqm, num_reads=50)
+    num_reads = 100
+    sampleset = sampler.sample(bqm, num_reads=num_reads)
 
     log.debug('embedding and sampling time: %s', time.time() - sample_time)
 
