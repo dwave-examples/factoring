@@ -4,18 +4,13 @@ import sys
 import os
 from setuptools import setup
 
-_PY2 = sys.version_info.major == 2
-
 # Change directories so this works when called from other locations. Useful in build systems that build from source.
 setup_folder_loc = os.path.dirname(os.path.abspath(__file__))
 os.chdir(setup_folder_loc)
 
 # Add __version__, __author__, __authoremail__, __description__ to this namespace
 path_to_package_info = os.path.join('.', 'factoring', 'package_info.py')
-if _PY2:
-    execfile(path_to_package_info)
-else:
-    exec(open(path_to_package_info).read())
+exec(open(path_to_package_info).read())
 
 # These should be minimal requiments for the package to work, and avoid pinning dependencies unless required. See
 # https://packaging.python.org/discussions/install-requires-vs-requirements/

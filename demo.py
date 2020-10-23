@@ -18,11 +18,6 @@ from pprint import pprint
 
 from factoring.interfaces import factor
 
-_PY2 = sys.version_info.major == 2
-if _PY2:
-    input = raw_input
-
-
 def sanitised_input(description, variable, range_):
     start = range_[0]
     stop = range_[-1]
