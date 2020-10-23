@@ -30,7 +30,7 @@ setup(
     author=__author__,
     author_email=__authoremail__,
     description=__description__,
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     url='https://github.com/dwavesystems/factoring-demo',
     license='Apache 2.0',
     packages=packages,
