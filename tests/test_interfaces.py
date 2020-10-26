@@ -16,8 +16,8 @@ import unittest
 from random import randint
 import jsonschema
 
-from factoring.interfaces import factor
-from factoring.json_schema import json_schema
+from demo import factor
+from json_schema import json_schema
 
 
 class TestInterfaces(unittest.TestCase):
