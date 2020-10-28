@@ -14,18 +14,10 @@
 
 import unittest
 from random import randint
-import jsonschema
 
 from demo import factor
-from json_schema import json_schema
-
 
 class TestInterfaces(unittest.TestCase):
-
-    def test_factor_output(self):
-        P = randint(0, 2**6-1)
-        output = factor(P)
-        jsonschema.validate(output, json_schema)
 
     def test_factor_invalid(self):
         for P in [-1, 64, 'a']:
