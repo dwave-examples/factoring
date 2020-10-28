@@ -97,7 +97,7 @@ def factor(P):
     # ==============
 
     output = {
-        "results": [],
+        "Results": [],
         #    {
         #        "a": Number,
         #        "b": Number,
@@ -105,12 +105,12 @@ def factor(P):
         #        "numOfOccurrences": Number,
         #        "percentageOfOccurrences": Number
         #    }
-        "timing": {
-            "actual": {
-                "qpuProcessTime": None  # microseconds
+        "Timing": {
+            "Actual": {
+                "QPU processing time": None  # microseconds
             }
         },
-        "numberOfReads": None
+        "Number of reads": None
     }
 
     # multiplication_circuit() creates these variables
@@ -129,20 +129,20 @@ def factor(P):
         a, b = int(a), int(b)
         # Aggregate results by unique A and B values (ignoring internal circuit variables)
         if (a, b, P) in results_dict:
-            results_dict[(a, b, P)]["numOfOccurrences"] += num_occurrences
-            results_dict[(a, b, P)]["percentageOfOccurrences"] = 100 * \
-                results_dict[(a, b, P)]["numOfOccurrences"] / num_reads
+            results_dict[(a, b, P)]["Occurrences"] += num_occurrences
+            results_dict[(a, b, P)]["Percentage of results"] = 100 * \
+                results_dict[(a, b, P)]["Occurrences"] / num_reads
         else:
             results_dict[(a, b, P)] = {"a": a,
                                        "b": b,
-                                       "valid": a * b == P,
-                                       "numOfOccurrences": num_occurrences,
-                                       "percentageOfOccurrences": 100 * num_occurrences / num_reads}
+                                       "Valid": a * b == P,
+                                       "Occurrences": num_occurrences,
+                                       "Percentage of results": 100 * num_occurrences / num_reads}
 
-    output['results'] = list(results_dict.values())
-    output['numberOfReads'] = num_reads
+    output['Results'] = list(results_dict.values())
+    output['Number of reads'] = num_reads
 
-    output['timing']['actual']['qpuProcessTime'] = sampleset.info['timing']['qpu_access_time']
+    output['Timing']['Actual']['QPU processing time'] = sampleset.info['timing']['qpu_access_time']
 
     return output
 
