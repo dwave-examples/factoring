@@ -14,6 +14,7 @@
 
 import unittest
 from random import randint
+from dwave.cloud.utils import retried
 
 from demo import factor
 
@@ -23,9 +24,8 @@ class TestInterfaces(unittest.TestCase):
         for P in [-1, 64, 'a']:
             self.assertRaises(ValueError, factor, P)
 
+    @retried(2)
     def test_factor_validity(self):
         for P in [12, 21, 49]: # {a*b for a in range(2**3) for b in range(2**3)}:
-            retries = 3
-            while retries > 0 and not factor(P)['Results'][0]['Valid']:
-                retries -= 1
-            self.assertGreater(retries, 0)
+            output = factor(P)
+            self.assertTrue(output['Results'][0]['Valid'])
