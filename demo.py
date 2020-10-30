@@ -101,9 +101,9 @@ def factor(P):
         #    {
         #        "a": Number,
         #        "b": Number,
-        #        "valid": Boolean,
-        #        "numOfOccurrences": Number,
-        #        "percentageOfOccurrences": Number
+        #        "Valid": Boolean,
+        #        "Occurrences": Number,
+        #        "Percentage of results": Number
         #    }
         "Timing": {
             "Actual": {
