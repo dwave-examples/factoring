@@ -3,7 +3,7 @@
 # Factoring
 
 This code demonstrates the use of the D-Wave system to solve a factoring
-problem. This is done by turning said problem into a three-bit multiplier
+problem. This is done by turning the problem into a three-bit multiplier
 circuit.
 
 ## Usage
@@ -43,15 +43,6 @@ logic of all the gates in the circuit.  This perspective of constraint
 satisfaction has no directionality. That is, input values do not need to flow
 through a series of gates to yield a result, as they do in a multiplication
 circuit.
-
-## Code Specifics
-
-By default, the main interface function uses a saved embedding. This can be
-overriden and the code to calculate a new embedding can be called by using:
-
-```bash
-factor(P, use_saved_embedding=False)
-```
 
 ## License
 
