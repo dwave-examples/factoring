@@ -29,10 +29,10 @@ class IntegrationTests(unittest.TestCase):
         p = Popen([sys.executable, demo_file], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         p.stdin.write(b'49\n')
         output = p.communicate()[0]
+        output = output.decode(encoding='UTF-8').upper()
         if os.getenv('DEBUG_OUTPUT'):
             print("Example output \n"+ output)
 
-        output = output.decode(encoding='UTF-8').upper()
         best_start = output.find("OCCURRENCES")
         best_end = max(output.find("OCCURRENCES", best_start+1),
                               len(output))  # For the rare case of one solution
