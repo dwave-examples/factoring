@@ -146,7 +146,7 @@ def factor(P):
     return output
 
 def display_output(output):
-    header_str = 'Factors    Valid?  Percentage of occurences'
+    header_str = 'Factors    Valid?  Percentage of occurrences'
     total_width = 80  # Assumed total console width
     # Width available to draw bars:
     available_width = total_width - header_str.index('P') - 4
