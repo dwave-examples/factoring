@@ -146,20 +146,23 @@ def factor(P):
     return output
 
 def display_output(output):
-    header_str = 'Factors    Valid?  Percentage of occurrences'
+    header1_str = 'Factors    Valid?  Percentage of Occurrences'
+    header2_str = ' ' * header1_str.index('P') + 'Numeric & Graphic Representation'
     total_width = 80  # Assumed total console width
     # Width available to draw bars:
-    available_width = total_width - header_str.index('P') - 4
+    available_width = total_width - header1_str.index('P') - 4
 
-    print('-'*len(header_str))
-    print(header_str)
-    print('-'*len(header_str))
+    header_len = max(len(header1_str), len(header2_str))
+    print('-'*header_len)
+    print(header1_str)
+    print(header2_str)
+    print('-'*header_len)
 
     for result in output['Results']:
         percentage = result['Percentage of results']
         print('({:3},{:3})  {:3}     {:3.0f} '.format(result['a'], result['b'], 'Yes' if result['Valid'] else '', percentage), end='')
         nbars = int(percentage/100 * available_width)
-        print('#' * nbars)
+        print('*' * nbars)
 
 
 if __name__ == '__main__':
