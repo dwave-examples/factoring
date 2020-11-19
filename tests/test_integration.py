@@ -16,6 +16,8 @@ from subprocess import Popen, PIPE,STDOUT
 import os
 import sys
 import unittest
+import re
+import ast
 
 from dwave.cloud.utils import retried
 
@@ -29,25 +31,17 @@ class IntegrationTests(unittest.TestCase):
         p = Popen([sys.executable, demo_file], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         p.stdin.write(b'49\n')
         output = p.communicate()[0]
-        output = output.decode(encoding='UTF-8').upper()
+        output = output.decode(encoding='UTF-8')
         if os.getenv('DEBUG_OUTPUT'):
             print("Example output \n"+ output)
 
-        best_start = output.find("OCCURRENCES")
-        best_end = max(output.find("OCCURRENCES", best_start+1),
-                              len(output))  # For the rare case of one solution
-        best = output[best_start:best_end-1]
+        best_line = re.search('^(\([^\n]*)', output, re.M).group(0)
+        best_factors = re.search('(\([^a-z]*)', best_line, re.I).group(0)
 
-        with self.subTest(msg="Verify if output contains result a==7"):
-            self.assertIn("'A': 7", best)
-        with self.subTest(msg="Verify if output contains result b==7"):
-            self.assertIn("'B': 7", best)
-        with self.subTest(msg="Verify if output contains valid result"):
-            self.assertIn("VALID", best)
-        with self.subTest(msg="Verify if error string contains in output"):
-            self.assertNotIn("ERROR", output)
-        with self.subTest(msg="Verify if warning string contains in output"):
-            self.assertNotIn("WARNING", output)
+        with self.subTest(msg="Verify output contains factor (7,7)"):
+            self.assertEqual(ast.literal_eval(best_factors), (7,7))
+        with self.subTest(msg="Verify output contains valid result"):
+            self.assertIn("Yes", best_line)
 
 if __name__ == '__main__':
     unittest.main()
