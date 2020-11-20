@@ -13,7 +13,6 @@
 #    limitations under the License.
 
 import sys
-from pprint import pprint
 import time
 import logging
 import functools
@@ -146,6 +145,25 @@ def factor(P):
 
     return output
 
+def display_output(output):
+    header1_str = 'Factors    Valid?  Percentage of Occurrences'
+    header2_str = ' ' * header1_str.index('P') + 'Numeric & Graphic Representation'
+    total_width = 80  # Assumed total console width
+    # Width available to draw bars:
+    available_width = total_width - header1_str.index('P') - 4
+
+    header_len = max(len(header1_str), len(header2_str))
+    print('-'*header_len)
+    print(header1_str)
+    print(header2_str)
+    print('-'*header_len)
+
+    for result in output['Results']:
+        percentage = result['Percentage of results']
+        print('({:3},{:3})  {:3}     {:3.0f} '.format(result['a'], result['b'], 'Yes' if result['Valid'] else '', percentage), end='')
+        nbars = int(percentage/100 * available_width)
+        print('*' * nbars)
+
 
 if __name__ == '__main__':
     # get input from user
@@ -157,4 +175,4 @@ if __name__ == '__main__':
     output = factor(P)
 
     # output results
-    pprint(output)
+    display_output(output)
