@@ -88,7 +88,9 @@ def factor(P):
     sampler = EmbeddingComposite(DWaveSampler())
 
     num_reads = 100
-    sampleset = sampler.sample(bqm, num_reads=num_reads)
+    sampleset = sampler.sample(bqm,
+                               num_reads=num_reads,
+                               label='Example - Factoring')
 
     log.debug('embedding and sampling time: %s', time.time() - sample_time)
 
