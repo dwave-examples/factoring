@@ -24,7 +24,7 @@ from dwave.cloud.utils import retried
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class IntegrationTests(unittest.TestCase):
-
+    @unittest.skipIf(os.getenv('SKIP_INT_TESTS'), "Skipping integration test.")
     @retried(2)
     def test_factoring(self):
         demo_file = os.path.join(project_dir, 'demo.py')
