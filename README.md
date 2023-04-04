@@ -1,4 +1,9 @@
-[![Linux/Mac/Windows build status](https://circleci.com/gh/dwave-examples/factoring.svg?style=svg)](https://circleci.com/gh/dwave-examples/factoring)
+[![Open in Leap IDE](
+  https://cdn-assets.cloud.dwavesys.com/shared/latest/badges/leapide.svg)](
+  https://ide.dwavesys.io/#https://github.com/dwave-examples/factoring)
+[![Linux/Mac/Windows build status](
+  https://circleci.com/gh/dwave-examples/factoring.svg?style=shield)](
+  https://circleci.com/gh/dwave-examples/factoring)
 
 # Factoring
 
